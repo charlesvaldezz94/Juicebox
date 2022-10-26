@@ -1,5 +1,6 @@
 const { client } = require('./index');
 
+
 async function testDB() {
     try {
       client.connect();
