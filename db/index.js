@@ -122,6 +122,20 @@ async function getPostsByUser(userId) {
 }
 
 
+async function getUserById(userId) {
+  try {
+    const { user } = await client.query(`
+    SELECT * FROM user
+    WHERE "userId"=${ userId};`
+    )
+    console.log({user})
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
 module.exports = {
   client,
   getAllUsers,
@@ -130,5 +144,6 @@ module.exports = {
   createPost,
   updatePost,
   getAllPosts,
-  getPostsByUser
+  getPostsByUser,
+  getUserById
 };
