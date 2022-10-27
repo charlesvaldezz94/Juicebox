@@ -35,7 +35,7 @@ async function updateUser(id, fields = {}) {
   const setString = Object.keys(fields)
     .map((key, index) => `"${key}"=$${index + 1}`)
     .join(", ");
-
+    
   // return early if this is called without fields
   if (setString.length === 0) {
     return;
@@ -45,8 +45,8 @@ async function updateUser(id, fields = {}) {
     const result = await client.query(
       `
   UPDATE users
-  SET "name"='new name', "location"='new location'
-  WHERE id=2;
+  SET ${ setString}
+  WHERE id= ${ id }
   RETURNING *;
     `,
       Object.values(fields)
