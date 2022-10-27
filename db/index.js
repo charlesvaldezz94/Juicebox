@@ -150,6 +150,36 @@ async function getPostsByUser(userId) {
   }
 }
 
+
+async function createTags(tagList) {
+  if (tagList.length === 0) { 
+    return; 
+  }
+
+  // need something like: $1), ($2), ($3 
+  const insertValues = tagList.map(
+    (_, index) => `$${index + 1}`).join('$1), ($2), ($3');
+  // then we can use: (${ insertValues }) in our string template
+
+  // need something like $1, $2, $3
+  const selectValues = tagList.map(
+    (_, index) => `$${index + 1}`).join('$1, $2,$3');
+  // then we can use (${ selectValues }) in our string template
+
+  try {
+    const rows = await client.query(`
+    INSERT INTO tags(name)
+    ON CONFLICT (name) DO NOTHING
+    RETURNING *;
+    `)
+    
+   return rows;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
 module.exports = {  
   client,
   createUser,
@@ -160,4 +190,5 @@ module.exports = {
   updatePost,
   getAllPosts,
   getPostsByUser
+  createTags
 }
