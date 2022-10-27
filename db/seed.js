@@ -1,10 +1,11 @@
-const { client, getAllUsers, createUser, updateUser } = require("./index");
+const { client, getAllUsers, createUser, updateUser, createPost, updatePost, getAllPosts, getPostsByUser  } = require("./index");
 
 async function dropTables() {
   try {
     console.log("Starting to drop tables...");
 
     await client.query(`
+      DROP TABLE IF EXISTS posts;
       DROP TABLE IF EXISTS users;
     `);
 
@@ -14,6 +15,7 @@ async function dropTables() {
     throw error;
   }
 }
+
 
 async function createTables() {
   try {
@@ -30,12 +32,22 @@ async function createTables() {
       );
     `);
 
+    await client.query(`
+    CREATE TABLE posts(
+      id SERIAL PRIMARY KEY,
+      "authorId" INTEGER REFERENCES users(id) NOT NULL,
+      title VARCHAR(255) NOT NULL,
+      content TEXT NOT NULL,
+      active BOOLEAN DEFAULT true 
+    )`)
+
     console.log("Finished building tables!");
   } catch (error) {
     console.error("Error building tables!");
     throw error;
   }
 }
+
 
 async function createInitialUsers() {
   try {
@@ -67,6 +79,7 @@ async function createInitialUsers() {
   }
 }
 
+
 async function rebuildDB() {
   try {
     client.connect();
@@ -79,20 +92,21 @@ async function rebuildDB() {
   }
 }
 
+
 async function testDB() {
   try {
     console.log("Starting to test database...");
 
-    console.log("Calling getAllUsers")
-    const users = await getAllUsers();
-    console.log("Result:", users);
+    // console.log("Calling getAllUsers")
+    // const users = await getAllUsers();
+    // console.log("Result:", users);
 
-    console.log("Calling updateUser on users[0]")
-    const updateUserResult = await updateUser(users[0].id, {
-      name: "Newname Sogood",
-      location: "Lesterville, KY"
-    });
-    console.log("Result:", updateUserResult);
+    // console.log("Calling updateUser on users[1]")
+    // const updateUserResult = await updateUser(users[1].id, {
+    //   name: "albie",
+    //   location: "albhouse"
+    // });
+    // console.log("Result:", updateUserResult);
 
     console.log("Finished database tests!");
   } catch (error) {
@@ -100,6 +114,8 @@ async function testDB() {
     throw error;
   }
 }
+
+
 
 rebuildDB()
   .then(testDB)
