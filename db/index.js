@@ -80,10 +80,6 @@ async function getUserById(userId) {
   }
 }
 
-/**
- * POST Methods
- */
-
 async function createPost({
   authorId,
   title,
