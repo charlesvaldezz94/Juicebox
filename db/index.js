@@ -87,7 +87,12 @@ async function getUserById(userId) {
   }
 }
 
-async function createPost({ authorId, title, content }) {
+async function createPost({
+  authorId,
+  title,
+  content,
+  tags = [], // this is new
+}) {
   try {
     const {
       rows: [post],
@@ -100,7 +105,9 @@ async function createPost({ authorId, title, content }) {
       [authorId, title, content]
     );
 
-    return post;
+    const tagList = await createTags(tags);
+
+    return await addTagsToPost(post.id, tagList);
   } catch (error) {
     throw error;
   }
