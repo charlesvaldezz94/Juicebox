@@ -7,8 +7,10 @@ const {
   updatePost,
   getAllPosts,
   getPostsByUser,
+  createTags,
   getUserById,
   addTagsToPost,
+  getPostById
 } = require("./index");
 
 async function dropTables() {
@@ -114,7 +116,23 @@ async function createInitialPosts() {
         "This is my first post. I hope I love writing blogs as much as I love writing them.",
     });
     console.log("created post");
-    // a couple more
+
+    await createPost({
+      authorId: albert.id,
+      title: "Second Post",
+      content:
+        "This is my Second post. I hope I love writing blogs as much as I love writing them.",
+    });
+    console.log("created post");
+
+    await createPost({
+      authorId: albert.id,
+      title: "Third Post",
+      content:
+        "This is my Third post. I hope I love writing blogs as much as I love writing them.",
+    });
+    console.log("created post");
+
   } catch (error) {
     throw error;
   }
@@ -131,11 +149,11 @@ async function createInitialTags() {
     ]);
 
     const [postOne, postTwo, postThree] = await getAllPosts();
-
     await addTagsToPost(postOne.id, [happy, inspo]);
     await addTagsToPost(postTwo.id, [sad, inspo]);
     await addTagsToPost(postThree.id, [happy, catman, inspo]);
 
+    
     console.log("Finished creating tags!");
   } catch (error) {
     console.log("Error creating tags!");
@@ -150,6 +168,7 @@ async function rebuildDB() {
     await createTables();
     await createInitialUsers();
     await createInitialPosts();
+    await createInitialTags(); // new
   } catch (error) {
     console.log("Error during rebuildDB")
     throw error;
@@ -185,6 +204,10 @@ async function testDB() {
     console.log("Calling getUserById with 1");
     const albert = await getUserById(1);
     console.log("Result:", albert);
+
+    console.log("Checking the tags");
+    const tagcheck = await getPostById(1);
+    console.log("TAGS:", tagcheck)
 
     console.log("Finished database tests!");
   } catch (error) {
