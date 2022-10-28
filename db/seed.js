@@ -141,6 +141,19 @@ async function createInitialTags() {
     throw error;
   }
 }
+async function rebuildDB() {
+  try {
+    client.connect();
+
+    await dropTables();
+    await createTables();
+    await createInitialUsers();
+    await createInitialPosts();
+  } catch (error) {
+    console.log("Error during rebuildDB")
+    throw error;
+  }
+}
 
 async function testDB() {
   try {
