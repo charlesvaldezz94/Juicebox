@@ -327,6 +327,17 @@ async function getPostsByTagName(tagName) {
   }
 }
 
+//stopping point monday
+async function getAllTags(tagId) {
+  try {
+    const {
+      rows: [tags],
+    } = await client.query(
+      `
+      SELECT *
+      FROM tags;
+    
+
 module.exports = {
   client,
   createUser,
@@ -341,4 +352,5 @@ module.exports = {
   addTagsToPost,
   getPostById,
   getPostsByTagName,
+  getAllTags
 };
