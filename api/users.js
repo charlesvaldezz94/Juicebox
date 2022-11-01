@@ -1,6 +1,6 @@
-const express = require("express");
+const express = require('express');
+const { getAllUsers } = require('../db');
 const usersRouter = express.Router();
-const { getAllUsers } = require("../db");
 
 usersRouter.use((req, res, next) => {
   console.log("A request is being made to /users");
@@ -8,11 +8,11 @@ usersRouter.use((req, res, next) => {
   next();
 });
 
-usersRouter.get("/", async (req, res) => {
+usersRouter.get('/', async (req, res) => {
   const users = await getAllUsers();
 
   res.send({
-    users: [],
+    users
   });
 });
 
