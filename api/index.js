@@ -1,22 +1,9 @@
 const express = require("express");
-const apiRouter = express.Router();
-
-const usersRouter = require("./users");
-apiRouter.use("/users", usersRouter);
-
-const tagsRouter = require("./tags");
-apiRouter.use("/tags", tagsRouter);
-
-const postsRouter = require("./posts");
-apiRouter.use("/posts", postsRouter);
-
-// module.exports = apiRouter;
-
 const jwt = require("jsonwebtoken");
 const { getUserById } = require("../db");
 const { JWT_SECRET } = process.env;
 
-// set `req.user` if possible
+
 apiRouter.use(async (req, res, next) => {
   const prefix = "Bearer ";
   const auth = req.header("Authorization");
@@ -44,6 +31,23 @@ apiRouter.use(async (req, res, next) => {
     });
   }
 });
+
+// Attach routers below here
+
+const apiRouter = express.Router();
+
+const usersRouter = require("./users");
+apiRouter.use("/users", usersRouter);
+
+const tagsRouter = require("./tags");
+apiRouter.use("/tags", tagsRouter);
+
+const postsRouter = require("./posts");
+apiRouter.use("/posts", postsRouter);
+
+
+
+
 apiRouter.use((req, res, next) => {
   if (req.user) {
     console.log("User is set:", req.user);
@@ -52,7 +56,6 @@ apiRouter.use((req, res, next) => {
   next();
 });
 
-// Attach routers below here
 
 // all routers attached ABOVE here
 apiRouter.use((error, req, res, next) => {
