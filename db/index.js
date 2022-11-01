@@ -308,6 +308,7 @@ async function addTagsToPost(postId, tagList) {
     throw error;
   }
 }
+
 async function getPostsByTagName(tagName) {
   try {
     const { rows: postIds } = await client.query(
@@ -327,15 +328,17 @@ async function getPostsByTagName(tagName) {
   }
 }
 
-//stopping point monday
-async function getAllTags(tagId) {
+async function getAllTags() {
   try {
-    const {
-      rows: [tags],
-    } = await client.query(
-      `
-      SELECT *
-      FROM tags;
+    const { rows: tags } = await client.query(`
+      SELECT * FROM tags
+    `);
+
+    return tags;
+  } catch (error) {
+    throw error;
+  }
+}
     
 
 module.exports = {
