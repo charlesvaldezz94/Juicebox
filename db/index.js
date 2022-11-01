@@ -330,11 +330,11 @@ async function getPostsByTagName(tagName) {
 
 async function getAllTags() {
   try {
-    const { rows: tags } = await client.query(`
-      SELECT * FROM tags
+    const { rows } = await client.query(`
+      SELECT * FROM tags;
     `);
 
-    return tags;
+    return rows;
   } catch (error) {
     throw error;
   }
