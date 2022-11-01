@@ -16,14 +16,14 @@ usersRouter.get("/", async (req, res) => {
   });
 });
 
-usersRouter.post("/login", async (req, res, next) => {
+usersRouter.post('/login', async (req, res, next) => {
   const { username, password } = req.body;
 
   // request must have both
   if (!username || !password) {
     next({
       name: "MissingCredentialsError",
-      message: "Please supply both a username and password",
+      message: "Please supply both a username and password"
     });
   }
 
@@ -34,12 +34,12 @@ usersRouter.post("/login", async (req, res, next) => {
       // create token & return to user
       res.send({ message: "you're logged in!" });
     } else {
-      next({
-        name: "IncorrectCredentialsError",
-        message: "Username or password is incorrect",
+      next({ 
+        name: 'IncorrectCredentialsError', 
+        message: 'Username or password is incorrect'
       });
     }
-  } catch (error) {
+  } catch(error) {
     console.log(error);
     next(error);
   }
