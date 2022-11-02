@@ -1,8 +1,8 @@
 const express = require("express");
+const apiRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const { getUserById } = require("../db");
 const { JWT_SECRET } = process.env;
-
 
 apiRouter.use(async (req, res, next) => {
   const prefix = "Bearer ";
@@ -33,8 +33,13 @@ apiRouter.use(async (req, res, next) => {
 });
 
 // Attach routers below here
+apiRouter.use((req, res, next) => {
+  if (req.user) {
+    console.log("User is set:", req.user);
+  }
 
-const apiRouter = express.Router();
+  next();
+});
 
 const usersRouter = require("./users");
 apiRouter.use("/users", usersRouter);
@@ -44,18 +49,6 @@ apiRouter.use("/tags", tagsRouter);
 
 const postsRouter = require("./posts");
 apiRouter.use("/posts", postsRouter);
-
-
-
-
-apiRouter.use((req, res, next) => {
-  if (req.user) {
-    console.log("User is set:", req.user);
-  }
-
-  next();
-});
-
 
 // all routers attached ABOVE here
 apiRouter.use((error, req, res, next) => {
