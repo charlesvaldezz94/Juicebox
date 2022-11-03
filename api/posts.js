@@ -1,11 +1,34 @@
 const express = require("express");
 const postsRouter = express.Router();
 const { getAllPosts } = require("../db");
+const { requireUser } = require('./utils');
+
+
 
 postsRouter.use((req, res, next) => {
   console.log("A request is being made to /posts");
 
   next();
+});
+
+postsRouter.post('/', requireUser, async (req, res, next) => {
+  const { title, content, tags = "" } = req.body;
+
+  const tagArr = tags.trim().split(/\s+/)
+  const postData = {authorId, title, content};
+
+  if (tagArr.length) {
+    postData.tags = tagArr;
+  }
+
+  try {
+    const post = await createPost(postData)
+    if (post) {
+      res.send({ post })
+    };
+  } catch ({ name, message }) {
+    next({ name, message });
+  }
 });
 
 postsRouter.get("/", async (req, res) => {
