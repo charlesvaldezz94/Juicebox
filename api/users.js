@@ -2,7 +2,7 @@ const express = require("express");
 const { getAllUsers } = require("../db");
 const usersRouter = express.Router();
 const { getUserByUsername } = require("../db");
-const { createUser } = require("../db")
+const { createUser } = require("../db");
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = process.env;
 
@@ -36,7 +36,17 @@ usersRouter.post("/login", async (req, res, next) => {
 
     if (user && user.password == password) {
       // create token & return to user
-      res.send({ message: "you're logged in!" });
+      const token = jwt.sign(
+        {
+          id: user.id,
+          username,
+        },
+        JWT_SECRET,
+        {
+          expiresIn: "1w",
+        }
+      );
+      res.send({ token, message: "you're logged in!" });
     } else {
       next({
         name: "IncorrectCredentialsError",
@@ -49,7 +59,7 @@ usersRouter.post("/login", async (req, res, next) => {
   }
 });
 
-usersRouter.post('/register', async (req, res, next) => {
+usersRouter.post("/register", async (req, res, next) => {
   const { username, password, name, location } = req.body;
 
   try {
@@ -57,8 +67,8 @@ usersRouter.post('/register', async (req, res, next) => {
 
     if (_user) {
       next({
-        name: 'UserExistsError',
-        message: 'A user by that username already exists'
+        name: "UserExistsError",
+        message: "A user by that username already exists",
       });
     }
 
@@ -69,21 +79,24 @@ usersRouter.post('/register', async (req, res, next) => {
       location,
     });
 
-    const token = jwt.sign({ 
-      id: user.id, 
-      username
-    }, process.env.JWT_SECRET, {
-      expiresIn: '1w'
-    });
+    const token = jwt.sign(
+      {
+        id: user.id,
+        username,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1w",
+      }
+    );
 
-    res.send({ 
+    res.send({
       message: "thank you for signing up",
-      token 
+      token,
     });
   } catch ({ name, message }) {
-    next({ name, message })
-  } 
+    next({ name, message });
+  }
 });
-
 
 module.exports = usersRouter;

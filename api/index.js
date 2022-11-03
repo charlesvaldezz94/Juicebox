@@ -1,7 +1,7 @@
 const express = require("express");
 const apiRouter = express.Router();
 const jwt = require("jsonwebtoken");
-const { getUserById } = require("../db");
+const { getUserById, getPostById } = require("../db");
 const { JWT_SECRET } = process.env;
 
 apiRouter.use(async (req, res, next) => {
@@ -59,3 +59,4 @@ apiRouter.use((error, req, res, next) => {
 });
 
 module.exports = apiRouter;
+getPostById;
